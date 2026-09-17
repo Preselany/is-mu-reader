@@ -1,0 +1,4837 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "IS MU Reader local API",
+    "version": "0.4.0",
+    "description": "Unofficial loopback API for IS MU reads. Log in through the CLI first. Full mail/notice views require explicit opt-in because they can mark items read. No account secrets or teaching materials are bundled.",
+    "license": {
+      "name": "MIT",
+      "identifier": "MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:8765",
+      "description": "Local foreground server"
+    }
+  ],
+  "security": [
+    {
+      "localBearer": []
+    }
+  ],
+  "paths": {
+    "/v1/status": {
+      "get": {
+        "operationId": "get_status",
+        "summary": "Verify live authentication and discover the selected study",
+        "responses": {
+          "200": {
+            "description": "Result. A snapshot can return 200 with complete=false.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or incorrect local API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Browser Origin or non-local Host refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown endpoint or resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Write method refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid input or unsupported operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error; no sensitive details logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "IS authentication required or upstream rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Incompatible local state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream HTTP, network or parser failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/courses": {
+      "get": {
+        "operationId": "list_courses",
+        "summary": "List current enrolments with details",
+        "responses": {
+          "200": {
+            "description": "Result. A snapshot can return 200 with complete=false.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Course"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or incorrect local API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Browser Origin or non-local Host refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown endpoint or resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Write method refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid input or unsupported operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error; no sensitive details logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "IS authentication required or upstream rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Incompatible local state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream HTTP, network or parser failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/notes": {
+      "get": {
+        "operationId": "get_notes",
+        "summary": "Read note-block source text",
+        "responses": {
+          "200": {
+            "description": "Result. A snapshot can return 200 with complete=false.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notes"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or incorrect local API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Browser Origin or non-local Host refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown endpoint or resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Write method refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid input or unsupported operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error; no sensitive details logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "IS authentication required or upstream rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Incompatible local state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream HTTP, network or parser failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/snapshot": {
+      "get": {
+        "operationId": "get_snapshot",
+        "summary": "Collect course resources and note blocks; inspect completeness",
+        "responses": {
+          "200": {
+            "description": "Result. A snapshot can return 200 with complete=false.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Snapshot"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or incorrect local API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Browser Origin or non-local Host refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown endpoint or resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Write method refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid input or unsupported operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error; no sensitive details logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "IS authentication required or upstream rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Incompatible local state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream HTTP, network or parser failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/courses/{code}/files": {
+      "get": {
+        "operationId": "get_course_files",
+        "summary": "List recursive native file metadata",
+        "responses": {
+          "200": {
+            "description": "Result. A snapshot can return 200 with complete=false.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Files"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or incorrect local API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Browser Origin or non-local Host refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown endpoint or resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Write method refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid input or unsupported operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error; no sensitive details logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "IS authentication required or upstream rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Incompatible local state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream HTTP, network or parser failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "description": "Case-sensitive code of exactly one enrolment in the selected study/period.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/courses/{code}/syllabus": {
+      "get": {
+        "operationId": "get_course_syllabus",
+        "summary": "Read accessible interactive syllabus sections",
+        "responses": {
+          "200": {
+            "description": "Result. A snapshot can return 200 with complete=false.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Syllabus"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or incorrect local API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Browser Origin or non-local Host refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown endpoint or resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Write method refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid input or unsupported operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error; no sensitive details logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "IS authentication required or upstream rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Incompatible local state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream HTTP, network or parser failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "description": "Case-sensitive code of exactly one enrolment in the selected study/period.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/courses/{code}/ropots": {
+      "get": {
+        "operationId": "get_course_ropots",
+        "summary": "List ROPOT metadata without starting attempts",
+        "responses": {
+          "200": {
+            "description": "Result. A snapshot can return 200 with complete=false.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ropots"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or incorrect local API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Browser Origin or non-local Host refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown endpoint or resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Write method refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid input or unsupported operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error; no sensitive details logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "IS authentication required or upstream rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Incompatible local state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream HTTP, network or parser failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "description": "Case-sensitive code of exactly one enrolment in the selected study/period.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/courses/{code}/forums": {
+      "get": {
+        "operationId": "get_course_forums",
+        "summary": "Read current course and group discussions",
+        "responses": {
+          "200": {
+            "description": "Result. A snapshot can return 200 with complete=false.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Forums"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or incorrect local API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Browser Origin or non-local Host refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown endpoint or resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Write method refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid input or unsupported operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error; no sensitive details logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "IS authentication required or upstream rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Incompatible local state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream HTTP, network or parser failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "description": "Case-sensitive code of exactly one enrolment in the selected study/period.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/courses/{code}/reservations": {
+      "get": {
+        "operationId": "get_course_reservations",
+        "summary": "Read reservation windows and occupancy",
+        "responses": {
+          "200": {
+            "description": "Result. A snapshot can return 200 with complete=false.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reservations"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or incorrect local API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Browser Origin or non-local Host refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown endpoint or resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Write method refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid input or unsupported operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error; no sensitive details logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "IS authentication required or upstream rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Incompatible local state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream HTTP, network or parser failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "description": "Case-sensitive code of exactly one enrolment in the selected study/period.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/courses/{code}/text": {
+      "get": {
+        "operationId": "get_course_text",
+        "summary": "Read a course-relative text file",
+        "responses": {
+          "200": {
+            "description": "Result. A snapshot can return 200 with complete=false.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileRead"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or incorrect local API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Browser Origin or non-local Host refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown endpoint or resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Write method refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid input or unsupported operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error; no sensitive details logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "IS authentication required or upstream rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Incompatible local state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream HTTP, network or parser failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "description": "Case-sensitive code of exactly one enrolment in the selected study/period.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "description": "Plain course-relative filename, URL-encoded once for transport; traversal and attempt objects are refused.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "um/notes.txt"
+          }
+        ]
+      }
+    },
+    "/v1/submissions": {
+      "get": {
+        "operationId": "open_submissions",
+        "summary": "List boxes open to this account",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Result; inspect paging/completeness fields.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenSubmissions"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or incorrect local API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Browser Origin or non-local Host refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown endpoint or resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Write method refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid input or unsupported operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error; no sensitive details logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "IS authentication required or upstream rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Incompatible local state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream HTTP, network or parser failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/courses/{code}/submissions": {
+      "get": {
+        "operationId": "course_submissions",
+        "summary": "Discover visible course submission folders",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Course code in the selected enrolments."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Result; inspect paging/completeness fields.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Submissions"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or incorrect local API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Browser Origin or non-local Host refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown endpoint or resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Write method refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid input or unsupported operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error; no sensitive details logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "IS authentication required or upstream rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Incompatible local state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream HTTP, network or parser failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/courses/{code}/submission": {
+      "get": {
+        "operationId": "get_submission_box",
+        "summary": "Read one submission folder and visible files",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Course code in the selected enrolments."
+          },
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Plain course-relative ode/.../ folder; URL-encode once."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Result; inspect paging/completeness fields.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmissionBox"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or incorrect local API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Browser Origin or non-local Host refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown endpoint or resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Write method refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid input or unsupported operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error; no sensitive details logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "IS authentication required or upstream rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Incompatible local state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream HTTP, network or parser failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/calendar": {
+      "get": {
+        "operationId": "get_calendar",
+        "summary": "Read native IS calendar events",
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Inclusive local date; requires end."
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Exclusive local date; requires start."
+          },
+          {
+            "name": "kinds",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated CalendarEvent.kind values; omitted means all kinds."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Result; inspect paging/completeness fields.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Calendar"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or incorrect local API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Browser Origin or non-local Host refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown endpoint or resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Write method refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid input or unsupported operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error; no sensitive details logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "IS authentication required or upstream rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Incompatible local state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream HTTP, network or parser failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/timetable": {
+      "get": {
+        "operationId": "get_timetable",
+        "summary": "Read the weekly timetable and source exceptions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Result; inspect paging/completeness fields.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Timetable"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or incorrect local API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Browser Origin or non-local Host refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown endpoint or resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Write method refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid input or unsupported operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error; no sensitive details logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "IS authentication required or upstream rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Incompatible local state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream HTTP, network or parser failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/exams": {
+      "get": {
+        "operationId": "list_exams",
+        "summary": "Read exam and registration series without registering",
+        "parameters": [
+          {
+            "name": "max_series",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Result; inspect paging/completeness fields.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Exams"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or incorrect local API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Browser Origin or non-local Host refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown endpoint or resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Write method refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid input or unsupported operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error; no sensitive details logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "IS authentication required or upstream rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Incompatible local state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream HTTP, network or parser failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/mail/folders": {
+      "get": {
+        "operationId": "mail_folders",
+        "summary": "List IS mailbox folders and counts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Result; inspect paging/completeness fields.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MailFolders"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or incorrect local API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Browser Origin or non-local Host refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown endpoint or resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Write method refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid input or unsupported operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error; no sensitive details logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "IS authentication required or upstream rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Incompatible local state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream HTTP, network or parser failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/mail/messages": {
+      "get": {
+        "operationId": "mail_messages",
+        "summary": "Read one page of message headers",
+        "parameters": [
+          {
+            "name": "folder",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Numeric folder ID; omitted uses the current mailbox default."
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000,
+              "default": 1
+            },
+            "description": "One-based offset."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Result; inspect paging/completeness fields.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MailListing"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or incorrect local API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Browser Origin or non-local Host refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown endpoint or resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Write method refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid input or unsupported operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error; no sensitive details logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "IS authentication required or upstream rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Incompatible local state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream HTTP, network or parser failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/mail/messages/{id}": {
+      "get": {
+        "operationId": "mail_message",
+        "summary": "Read RFC822 body parts with explicit read-state opt-in",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]+$"
+            }
+          },
+          {
+            "name": "folder",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Numeric folder ID returned by mail listings."
+          },
+          {
+            "name": "allow_mark_read",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "const": true
+            },
+            "description": "Explicitly allow upstream viewing to mark the item read. Must be true."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Result; inspect paging/completeness fields.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MailMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or incorrect local API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Browser Origin or non-local Host refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown endpoint or resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Write method refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid input or unsupported operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error; no sensitive details logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "IS authentication required or upstream rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Incompatible local state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream HTTP, network or parser failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/notices": {
+      "get": {
+        "operationId": "list_notices",
+        "summary": "Read noticeboard cards without opening messages",
+        "parameters": [
+          {
+            "name": "board",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Board or board/section, e.g. FI/zpravy. Omitted means curated account overview."
+          },
+          {
+            "name": "max_pages",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20,
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Result; inspect paging/completeness fields.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notices"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or incorrect local API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Browser Origin or non-local Host refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown endpoint or resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Write method refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid input or unsupported operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error; no sensitive details logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "IS authentication required or upstream rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Incompatible local state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream HTTP, network or parser failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/notices/{id}": {
+      "get": {
+        "operationId": "get_notice",
+        "summary": "Open a full notice with explicit read-state opt-in",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]+$"
+            }
+          },
+          {
+            "name": "allow_mark_read",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "const": true
+            },
+            "description": "Explicitly allow upstream viewing to mark the item read. Must be true."
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Missing or incorrect local API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Browser Origin or non-local Host refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown endpoint or resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Write method refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid input or unsupported operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error; no sensitive details logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "IS authentication required or upstream rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Notice body; upstream read tracking may change.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoticeDetail"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Incompatible local state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream HTTP, network or parser failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "localBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Read the private api-token file from the configured state directory."
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "upstream_status": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "error"
+        ]
+      },
+      "Context": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        },
+        "description": "Discovered IS MU study, period and faculty IDs, as strings."
+      },
+      "Link": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "url"
+        ]
+      },
+      "Status": {
+        "type": "object",
+        "properties": {
+          "authenticated": {
+            "const": true
+          },
+          "course_count": {
+            "type": "integer"
+          },
+          "context": {
+            "$ref": "#/components/schemas/Context"
+          },
+          "browser_required": {
+            "const": false
+          }
+        },
+        "required": [
+          "authenticated",
+          "course_count",
+          "context",
+          "browser_required"
+        ]
+      },
+      "Course": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "course_id": {
+            "type": "integer"
+          },
+          "source_url": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "faculty": {
+            "type": "string"
+          },
+          "semester": {
+            "type": "string"
+          },
+          "catalog_url": {
+            "type": "string"
+          },
+          "credits": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "completion": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "grade": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "teachers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "seminar": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "forums": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "forum_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "title",
+                "url",
+                "forum_id"
+              ]
+            }
+          },
+          "ropot_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "syllabus_entry_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reservation_urls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "materials_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "code",
+          "title",
+          "course_id"
+        ]
+      },
+      "FileVariant": {
+        "type": "object",
+        "properties": {
+          "object_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "path": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "mime_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "size": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "uploaded": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "object_id",
+          "name",
+          "path",
+          "mime_type",
+          "size",
+          "uploaded"
+        ]
+      },
+      "FileNode": {
+        "type": "object",
+        "properties": {
+          "node_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "path": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "parent_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "modified": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "child_count": {
+            "type": "integer"
+          },
+          "object_count": {
+            "type": "integer"
+          },
+          "state": {
+            "enum": [
+              "objects_listed",
+              "children_listed",
+              "metadata_only"
+            ]
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileVariant"
+            }
+          },
+          "uploaded_by": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "node_id",
+          "title",
+          "path",
+          "parent_id",
+          "modified",
+          "child_count",
+          "object_count",
+          "state",
+          "variants"
+        ]
+      },
+      "Files": {
+        "type": "object",
+        "properties": {
+          "course": {
+            "type": "string"
+          },
+          "source_url": {
+            "type": "string"
+          },
+          "format": {
+            "const": "native_xml"
+          },
+          "nodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileNode"
+            }
+          },
+          "node_count": {
+            "type": "integer"
+          },
+          "variant_count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "course",
+          "source_url",
+          "format",
+          "nodes",
+          "node_count",
+          "variant_count"
+        ]
+      },
+      "FileRead": {
+        "type": "object",
+        "properties": {
+          "course": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "mime_type": {
+            "type": "string"
+          },
+          "bytes": {
+            "type": "integer"
+          },
+          "sha256": {
+            "type": "string"
+          },
+          "source_url": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "saved_to": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "course",
+          "path",
+          "mime_type",
+          "bytes",
+          "sha256",
+          "source_url"
+        ],
+        "oneOf": [
+          {
+            "required": [
+              "text"
+            ]
+          },
+          {
+            "required": [
+              "saved_to"
+            ]
+          }
+        ]
+      },
+      "SyllabusSection": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "schedule_text": {
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "available",
+              "locked"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "id",
+          "schedule_text",
+          "state",
+          "text"
+        ]
+      },
+      "Syllabus": {
+        "type": "object",
+        "properties": {
+          "course": {
+            "type": "string"
+          },
+          "state": {
+            "const": "not_exposed"
+          },
+          "title": {
+            "type": "string"
+          },
+          "sections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SyllabusSection"
+            }
+          },
+          "text": {
+            "type": "string"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Link"
+            }
+          },
+          "source_url": {
+            "type": "string"
+          },
+          "content_hash": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "course",
+          "sections"
+        ],
+        "description": "state=not_exposed is returned only when no syllabus entry was discovered. Otherwise text and source fields are included."
+      },
+      "Availability": {
+        "type": "object",
+        "properties": {
+          "opens": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "closes": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "opens",
+          "closes",
+          "text"
+        ]
+      },
+      "Ropot": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "qref_path": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "url": {
+            "type": "string"
+          },
+          "availability": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Availability"
+            }
+          },
+          "status_text": {
+            "type": "string"
+          },
+          "grading_text": {
+            "type": "string"
+          },
+          "attempt_started_by_client": {
+            "const": false
+          }
+        },
+        "required": [
+          "title",
+          "qref_path",
+          "url",
+          "availability",
+          "status_text",
+          "grading_text",
+          "attempt_started_by_client"
+        ]
+      },
+      "Ropots": {
+        "type": "object",
+        "properties": {
+          "course": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Ropot"
+            }
+          },
+          "count": {
+            "type": "integer"
+          },
+          "state": {
+            "enum": [
+              "listed",
+              "empty",
+              "suppressed"
+            ]
+          },
+          "source_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "course",
+          "items",
+          "count",
+          "state",
+          "source_url"
+        ]
+      },
+      "ForumPost": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "author": {
+            "type": "string"
+          },
+          "date_text": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Link"
+            }
+          },
+          "url": {
+            "type": "string"
+          },
+          "content_hash": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "author",
+          "date_text",
+          "text",
+          "links",
+          "url",
+          "content_hash"
+        ]
+      },
+      "Forum": {
+        "type": "object",
+        "properties": {
+          "forum_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "listed",
+              "stale_semester"
+            ]
+          },
+          "source_url": {
+            "type": "string"
+          },
+          "posts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ForumPost"
+            }
+          },
+          "pages_read": {
+            "type": "integer"
+          },
+          "pagination_incomplete": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "forum_id",
+          "state",
+          "source_url",
+          "posts"
+        ]
+      },
+      "Forums": {
+        "type": "object",
+        "properties": {
+          "course": {
+            "type": "string"
+          },
+          "forums": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Forum"
+            }
+          },
+          "post_count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "course",
+          "forums",
+          "post_count"
+        ]
+      },
+      "Reservation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "event": {
+            "type": "string"
+          },
+          "starts_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "registered": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "registration_status_text": {
+            "type": "string"
+          },
+          "occupied": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "capacity": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "registration_opens": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "registration_closes_date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "closing_date_inclusive": {
+            "type": "boolean"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "event",
+          "starts_at",
+          "registered",
+          "registration_status_text",
+          "occupied",
+          "capacity",
+          "registration_opens",
+          "registration_closes_date",
+          "closing_date_inclusive",
+          "text"
+        ]
+      },
+      "ReservationSeries": {
+        "type": "object",
+        "properties": {
+          "source_url": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Reservation"
+            }
+          },
+          "text": {
+            "type": "string"
+          },
+          "series_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "source_url",
+          "items",
+          "text",
+          "series_id"
+        ]
+      },
+      "Reservations": {
+        "type": "object",
+        "properties": {
+          "course": {
+            "type": "string"
+          },
+          "series": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReservationSeries"
+            }
+          },
+          "state": {
+            "enum": [
+              "listed",
+              "not_exposed"
+            ]
+          }
+        },
+        "required": [
+          "course",
+          "series",
+          "state"
+        ]
+      },
+      "Notes": {
+        "type": "object",
+        "properties": {
+          "source_url": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_url",
+          "text"
+        ]
+      },
+      "SnapshotError": {
+        "type": "object",
+        "properties": {
+          "course": {
+            "type": "string"
+          },
+          "resource": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "resource",
+          "error"
+        ]
+      },
+      "CourseResources": {
+        "type": "object",
+        "properties": {
+          "syllabus": {
+            "$ref": "#/components/schemas/Syllabus"
+          },
+          "ropots": {
+            "$ref": "#/components/schemas/Ropots"
+          },
+          "forums": {
+            "$ref": "#/components/schemas/Forums"
+          },
+          "reservations": {
+            "$ref": "#/components/schemas/Reservations"
+          },
+          "files": {
+            "$ref": "#/components/schemas/Files"
+          }
+        }
+      },
+      "Snapshot": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "const": 1
+          },
+          "captured_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "context": {
+            "$ref": "#/components/schemas/Context"
+          },
+          "courses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Course"
+            }
+          },
+          "requested_resources": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/CourseResources"
+            }
+          },
+          "notes": {
+            "$ref": "#/components/schemas/Notes"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SnapshotError"
+            }
+          },
+          "complete": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "schema_version",
+          "captured_at",
+          "context",
+          "courses",
+          "requested_resources",
+          "data",
+          "errors",
+          "complete"
+        ],
+        "description": "A sequential observation. Inspect complete and errors; true does not imply every document body was read or every task inferred."
+      },
+      "OpenSubmission": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "faculty": {
+            "type": "string"
+          },
+          "semester": {
+            "type": "string"
+          },
+          "course": {
+            "type": "string"
+          },
+          "open_for_submission": {
+            "const": true
+          },
+          "source_url": {
+            "type": "string"
+          },
+          "context_text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "path",
+          "faculty",
+          "semester",
+          "course",
+          "open_for_submission",
+          "source_url",
+          "context_text"
+        ]
+      },
+      "OpenSubmissions": {
+        "type": "object",
+        "properties": {
+          "source_url": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenSubmission"
+            }
+          },
+          "count": {
+            "type": "integer"
+          },
+          "state": {
+            "enum": [
+              "listed",
+              "empty"
+            ]
+          },
+          "scope": {
+            "const": "open_to_current_user"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_url",
+          "items",
+          "count",
+          "state",
+          "scope",
+          "text"
+        ]
+      },
+      "SubmissionCandidate": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "node_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_url": {
+            "type": "string"
+          },
+          "open_for_submission": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "submission_status": {
+            "const": "unknown"
+          }
+        },
+        "required": [
+          "title",
+          "path",
+          "node_id",
+          "source_url",
+          "open_for_submission",
+          "submission_status"
+        ]
+      },
+      "Submissions": {
+        "type": "object",
+        "properties": {
+          "course": {
+            "type": "string"
+          },
+          "source_url": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubmissionCandidate"
+            }
+          },
+          "count": {
+            "type": "integer"
+          },
+          "scope": {
+            "const": "visible_folders_and_open_boxes"
+          },
+          "state": {
+            "enum": [
+              "listed",
+              "empty"
+            ]
+          },
+          "open_index_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "course",
+          "source_url",
+          "items",
+          "count",
+          "scope",
+          "state",
+          "open_index_url"
+        ]
+      },
+      "SubmissionFolder": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "is_folder": {
+            "type": "boolean"
+          },
+          "submission_box_code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "can_read": {
+            "type": "boolean"
+          },
+          "can_insert": {
+            "type": "boolean"
+          },
+          "permissions": {
+            "type": "object"
+          },
+          "attributes": {
+            "type": "object"
+          },
+          "inherited_attributes": {
+            "type": "object"
+          },
+          "modified_raw": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "title",
+          "description",
+          "is_folder",
+          "submission_box_code",
+          "can_read",
+          "can_insert",
+          "permissions",
+          "attributes",
+          "inherited_attributes",
+          "modified_raw",
+          "source_url"
+        ]
+      },
+      "SubmissionBox": {
+        "type": "object",
+        "properties": {
+          "course": {
+            "type": "string"
+          },
+          "source_url": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "folder": {
+            "$ref": "#/components/schemas/SubmissionFolder"
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubmissionFolder"
+            }
+          },
+          "visibility": {
+            "enum": [
+              "readable",
+              "insert_only",
+              "metadata_only"
+            ]
+          },
+          "submission_status": {
+            "enum": [
+              "unknown",
+              "own_files_visible"
+            ]
+          },
+          "scope": {
+            "const": "visible_children"
+          },
+          "text": {
+            "type": "string"
+          },
+          "visible_files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileNode"
+            }
+          },
+          "own_files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileNode"
+            }
+          }
+        },
+        "required": [
+          "course",
+          "source_url",
+          "path",
+          "folder",
+          "children",
+          "visibility",
+          "submission_status",
+          "scope",
+          "text",
+          "visible_files",
+          "own_files"
+        ],
+        "description": "Permissions and visible files only. own_files_visible is positive uploader evidence, not a successful or graded submission. Empty/insert-only views remain unknown."
+      },
+      "CalendarEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "provider_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "type_code": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "notice",
+              "exam_registration",
+              "exam",
+              "ropot",
+              "semester",
+              "holiday",
+              "timetable",
+              "online_teaching",
+              "unknown"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "start": {
+            "type": "string"
+          },
+          "end": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "all_day": {
+            "type": "boolean"
+          },
+          "location": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "hidden_in_ui": {
+            "type": "boolean"
+          },
+          "boundary_code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "provider_id",
+          "type_code",
+          "kind",
+          "title",
+          "start",
+          "end",
+          "all_day",
+          "location",
+          "description",
+          "url",
+          "hidden_in_ui",
+          "boundary_code"
+        ]
+      },
+      "Calendar": {
+        "type": "object",
+        "properties": {
+          "source_url": {
+            "type": "string"
+          },
+          "timezone": {
+            "const": "Europe/Prague"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CalendarEvent"
+            }
+          },
+          "count": {
+            "type": "integer"
+          },
+          "upstream_event_count": {
+            "type": "integer"
+          },
+          "layers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "type_codes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "title",
+                "type_codes"
+              ]
+            }
+          },
+          "hidden_type_codes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "scope": {
+            "const": "events_exposed_by_IS"
+          },
+          "coverage_start": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "coverage_end": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "range_completeness": {
+            "const": "not_guaranteed"
+          },
+          "requested_start": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "requested_end": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "requested_kinds": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "source_url",
+          "timezone",
+          "items",
+          "count",
+          "upstream_event_count",
+          "layers",
+          "hidden_type_codes",
+          "scope",
+          "coverage_start",
+          "coverage_end",
+          "range_completeness",
+          "requested_start",
+          "requested_end",
+          "requested_kinds"
+        ],
+        "description": "Events supplied by IS, potentially across multiple semesters. Date filters are local, start-inclusive/end-exclusive. Includes hidden layers. Source coverage dates do not guarantee completeness."
+      },
+      "TimetableEntry": {
+        "type": "object",
+        "properties": {
+          "course_label": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "weekday": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "start_time": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "end_time": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "kind": {
+            "enum": [
+              "lecture",
+              "other"
+            ]
+          },
+          "location": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "schedule_text": {
+            "type": "string"
+          },
+          "exceptions_text": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "detail_text": {
+            "type": "string"
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "course_label",
+          "title",
+          "weekday",
+          "start_time",
+          "end_time",
+          "kind",
+          "location",
+          "schedule_text",
+          "exceptions_text",
+          "detail_text",
+          "url"
+        ]
+      },
+      "Timetable": {
+        "type": "object",
+        "properties": {
+          "source_url": {
+            "type": "string"
+          },
+          "timezone": {
+            "const": "Europe/Prague"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimetableEntry"
+            }
+          },
+          "count": {
+            "type": "integer"
+          },
+          "scope": {
+            "const": "weekly_pattern"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_url",
+          "timezone",
+          "items",
+          "count",
+          "scope",
+          "text"
+        ]
+      },
+      "ExamSeries": {
+        "type": "object",
+        "properties": {
+          "course_id": {
+            "type": "string"
+          },
+          "series_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "teaching_reservation",
+              "exam_or_other"
+            ]
+          },
+          "source_url": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Reservation"
+            }
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "course_id",
+          "series_id",
+          "title",
+          "kind",
+          "source_url",
+          "items",
+          "text"
+        ]
+      },
+      "Exams": {
+        "type": "object",
+        "properties": {
+          "source_url": {
+            "type": "string"
+          },
+          "series": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExamSeries"
+            }
+          },
+          "registered_items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Reservation"
+            }
+          },
+          "text": {
+            "type": "string"
+          },
+          "series_count": {
+            "type": "integer"
+          },
+          "pagination_incomplete": {
+            "type": "boolean"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "course_id": {
+                  "type": "string"
+                },
+                "series_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "error": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "course_id",
+                "series_id",
+                "error"
+              ]
+            }
+          },
+          "complete": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "source_url",
+          "series",
+          "registered_items",
+          "text",
+          "series_count",
+          "pagination_incomplete",
+          "errors",
+          "complete"
+        ]
+      },
+      "MailFolder": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "unread_count": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "total_count": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "type",
+          "unread_count",
+          "total_count"
+        ]
+      },
+      "MailFolders": {
+        "type": "object",
+        "properties": {
+          "source_url": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MailFolder"
+            }
+          },
+          "count": {
+            "type": "integer"
+          },
+          "forwarding_enabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "source_url",
+          "items",
+          "count",
+          "forwarding_enabled"
+        ]
+      },
+      "MailSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "sender_name": {
+            "type": "string"
+          },
+          "sender_address": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "date_text": {
+            "type": "string"
+          },
+          "size_text": {
+            "type": "string"
+          },
+          "flags": {
+            "type": "string"
+          },
+          "unread": {
+            "type": "boolean"
+          },
+          "url": {
+            "type": "string"
+          },
+          "folder_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "subject",
+          "sender_name",
+          "sender_address",
+          "date_text",
+          "size_text",
+          "flags",
+          "unread",
+          "url",
+          "folder_id"
+        ]
+      },
+      "MailListing": {
+        "type": "object",
+        "properties": {
+          "source_url": {
+            "type": "string"
+          },
+          "folders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MailFolder"
+            }
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MailSummary"
+            }
+          },
+          "count": {
+            "type": "integer"
+          },
+          "folder_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "total_count": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "forwarding_enabled": {
+            "type": "boolean"
+          },
+          "start": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "next_start": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "pagination_incomplete": {
+            "type": "boolean"
+          },
+          "pagination_mode": {
+            "const": "local"
+          },
+          "upstream_returned_count": {
+            "type": "integer"
+          },
+          "upstream_truncated": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "source_url",
+          "folders",
+          "items",
+          "count",
+          "folder_id",
+          "total_count",
+          "forwarding_enabled",
+          "start",
+          "limit",
+          "next_start",
+          "pagination_incomplete",
+          "pagination_mode",
+          "upstream_returned_count",
+          "upstream_truncated"
+        ],
+        "description": "Locally paged native header table. Upstream start/count are not relied upon. Upstream truncation remains explicit and does not invent a next page."
+      },
+      "MailBody": {
+        "type": "object",
+        "properties": {
+          "part_id": {
+            "type": "string"
+          },
+          "mime_type": {
+            "enum": [
+              "text/plain",
+              "text/html"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "part_id",
+          "mime_type",
+          "text"
+        ]
+      },
+      "MailAttachment": {
+        "type": "object",
+        "properties": {
+          "part_id": {
+            "type": "string"
+          },
+          "filename": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "mime_type": {
+            "type": "string"
+          },
+          "bytes": {
+            "type": "integer"
+          },
+          "sha256": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "part_id",
+          "filename",
+          "mime_type",
+          "bytes",
+          "sha256"
+        ]
+      },
+      "MailMessage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "source_url": {
+            "type": "string"
+          },
+          "headers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "bodies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MailBody"
+            }
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MailAttachment"
+            }
+          },
+          "read_state_may_change": {
+            "const": true
+          }
+        },
+        "required": [
+          "id",
+          "source_url",
+          "headers",
+          "bodies",
+          "attachments",
+          "read_state_may_change"
+        ],
+        "description": "Native RFC822 export parsed into MIME parts. Export marks unread mail read, so explicit allow_mark_read=true is required. HTML is untrusted text."
+      },
+      "NoticeCard": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "author": {
+            "type": "string"
+          },
+          "date_text": {
+            "type": "string"
+          },
+          "date_detail": {
+            "type": "string"
+          },
+          "unread": {
+            "type": "boolean"
+          },
+          "priority": {
+            "enum": [
+              "important",
+              "targeted",
+              "normal"
+            ]
+          },
+          "preview": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "url",
+          "author",
+          "date_text",
+          "date_detail",
+          "unread",
+          "priority",
+          "preview"
+        ]
+      },
+      "Notices": {
+        "type": "object",
+        "properties": {
+          "source_url": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NoticeCard"
+            }
+          },
+          "count": {
+            "type": "integer"
+          },
+          "pages_read": {
+            "type": "integer"
+          },
+          "pagination_incomplete": {
+            "type": "boolean"
+          },
+          "scope": {
+            "enum": [
+              "overview",
+              "board"
+            ]
+          },
+          "board_links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Link"
+            }
+          }
+        },
+        "required": [
+          "source_url",
+          "items",
+          "count",
+          "pages_read",
+          "pagination_incomplete",
+          "scope",
+          "board_links"
+        ],
+        "description": "Cards only. Overview is curated, not all notices. Full body route requires explicit read-state opt-in."
+      },
+      "NoticeDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "source_url": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "author": {
+            "type": "string"
+          },
+          "date_text": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Link"
+            }
+          },
+          "content_hash": {
+            "type": "string"
+          },
+          "read_state_may_change": {
+            "const": true
+          }
+        },
+        "required": [
+          "id",
+          "source_url",
+          "title",
+          "author",
+          "date_text",
+          "text",
+          "links",
+          "content_hash",
+          "read_state_may_change"
+        ]
+      },
+      "LoginResult": {
+        "type": "object",
+        "properties": {
+          "authenticated": {
+            "const": true
+          },
+          "already_authenticated": {
+            "type": "boolean"
+          },
+          "password_saved": {
+            "const": false
+          }
+        },
+        "required": [
+          "authenticated",
+          "already_authenticated"
+        ]
+      },
+      "MailDownload": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "part_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "saved_to": {
+            "type": "string"
+          },
+          "bytes": {
+            "type": "integer"
+          },
+          "sha256": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "part_id",
+          "saved_to",
+          "bytes",
+          "sha256"
+        ]
+      },
+      "AnswerOption": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "selected": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "value",
+          "label",
+          "selected"
+        ]
+      },
+      "QuestionField": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "checked": {
+            "type": "boolean"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "maxlength": {
+            "type": "integer"
+          },
+          "multiple": {
+            "type": "boolean"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AnswerOption"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "type",
+          "value",
+          "label",
+          "checked",
+          "required"
+        ]
+      },
+      "QuestionData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "number": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuestionField"
+            }
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string"
+                },
+                "alt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "url",
+                "alt"
+              ]
+            }
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Link"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "number",
+          "title",
+          "text",
+          "fields",
+          "images",
+          "links"
+        ]
+      },
+      "AttemptView": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "enum": [
+              "unavailable",
+              "ready",
+              "active",
+              "submitted"
+            ]
+          },
+          "source_url": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuestionData"
+            }
+          },
+          "question_count_on_page": {
+            "type": "integer"
+          },
+          "total_pages": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "single_page_supported": {
+            "type": "boolean"
+          },
+          "submission_confirmed": {
+            "type": "boolean"
+          },
+          "receipt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "pending_action": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "from_local_capture": {
+            "type": "boolean"
+          },
+          "action": {
+            "enum": [
+              "start",
+              "save",
+              "submit"
+            ]
+          }
+        },
+        "required": [
+          "state",
+          "source_url",
+          "title",
+          "text",
+          "questions",
+          "question_count_on_page",
+          "total_pages",
+          "single_page_supported",
+          "submission_confirmed",
+          "receipt"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+client_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+client_python="$client_dir/.venv/bin/python"
+if [[ ! -x "$client_python" ]]; then
+  echo "Runtime missing. Install this package as described in README.md." >&2
+  exit 1
+fi
+exec "$client_python" -m ismu.cli "$@"

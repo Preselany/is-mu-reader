@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "is-mu-reader"
+version = "0.4.0"
+description = "Authenticated IS MU collection, explicit ROPOT attempts, JSON CLI and local read API"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+dependencies = ["requests>=2.32,<3", "beautifulsoup4>=4.12,<5"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Operating System :: POSIX",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Topic :: Education",
+]
+
+[project.optional-dependencies]
+dev = ["ruff>=0.9,<1", "build>=1.2,<2", "mypy>=1.15,<2", "openapi-spec-validator>=0.7,<1"]
+
+[project.urls]
+Repository = "https://github.com/Preselany/is-mu-reader"
+Documentation = "https://github.com/Preselany/is-mu-reader#readme"
+Issues = "https://github.com/Preselany/is-mu-reader/issues"
+Changelog = "https://github.com/Preselany/is-mu-reader/blob/main/CHANGELOG.md"
+
+[project.scripts]
+ismu = "ismu.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
+
+[tool.setuptools.package-data]
+ismu = ["py.typed"]
