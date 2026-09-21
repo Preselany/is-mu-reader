@@ -30,10 +30,11 @@ else:
 
 
 def _windows_user():
-    with win32security.OpenProcessToken(
-        win32api.GetCurrentProcess(), win32con.TOKEN_QUERY
-    ) as token:
+    token = win32security.OpenProcessToken(win32api.GetCurrentProcess(), win32con.TOKEN_QUERY)
+    try:
         return win32security.GetTokenInformation(token, win32security.TokenUser)[0]
+    finally:
+        token.Close()
 
 
 def _windows_attributes():

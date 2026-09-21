@@ -29,8 +29,11 @@ def assert_private(test, path, *, directory=False):
     import win32con
     import win32security as security
 
-    with security.OpenProcessToken(win32api.GetCurrentProcess(), win32con.TOKEN_QUERY) as token:
+    token = security.OpenProcessToken(win32api.GetCurrentProcess(), win32con.TOKEN_QUERY)
+    try:
         user = security.GetTokenInformation(token, security.TokenUser)[0]
+    finally:
+        token.Close()
     sd = security.GetNamedSecurityInfo(
         str(path),
         security.SE_FILE_OBJECT,
