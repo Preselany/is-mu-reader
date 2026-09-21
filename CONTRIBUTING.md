@@ -17,6 +17,10 @@ python -m openapi_spec_validator docs/openapi.json
 python -m build
 ```
 
+On Windows, create the venv with `py -3 -m venv .venv` and install with `.venv\Scripts\python.exe -m pip install -e ".[dev]"`. Run the Python checks with `.venv\Scripts\python.exe`, and use `.venv\Scripts\ruff.exe` / `.venv\Scripts\mypy.exe` for those tools. Activation is optional.
+
+CI runs on `ubuntu-latest` and `windows-latest` for Python 3.11–3.13. Windows storage tests inspect real ACLs and reject broad grants; POSIX tests inspect modes. A clean wheel installation also checks native CLI entry points, timezone imports and session persistence. Run `python tools/check_wheel.py` after building to reproduce it locally (installation may download dependencies). Never replace the Windows ACL check with `chmod`, which does not provide equivalent protection on Windows.
+
 Run `ruff format .` after editing. Tests are standard-library `unittest` and use synthetic HTML/XML plus mocked transports. Tests do not need real accounts or network access to IS MU. The REST security test uses a temporary loopback server. CI uses ordinary `push`/`pull_request` events and no account secrets, following the [GitHub Python workflow documentation](https://docs.github.com/en/actions/tutorials/build-and-test-code/python).
 
 ## Adding a reader

@@ -2,3 +2,4 @@
 *.py text
 *.md text
 *.json text
+*.cmd text eol=crlf

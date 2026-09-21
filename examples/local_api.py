@@ -3,6 +3,7 @@
 import argparse
 import json
 import os
+import sys
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -10,6 +11,7 @@ import requests
 
 
 def main():
+    sys.stdout.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("path", nargs="?", default="/v1/status")
     parser.add_argument("--port", type=int, default=8765)
@@ -20,7 +22,7 @@ def main():
     if not 1024 <= args.port <= 65535:
         parser.error("Choose a port between 1024 and 65535.")
     state = Path(os.environ.get("IS_MU_STATE_DIR", ".ismu-state"))
-    token = (state / "api-token").read_text().strip()
+    token = (state / "api-token").read_text(encoding="utf-8").strip()
     with requests.Session() as session:
         session.trust_env = False  # Keep localhost requests out of ambient HTTP proxies.
         response = session.get(

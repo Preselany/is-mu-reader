@@ -3,9 +3,7 @@
 from __future__ import annotations
 
 import json
-import os
 import re
-import tempfile
 import time
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urljoin, urlsplit
@@ -16,23 +14,12 @@ from bs4 import BeautifulSoup
 from . import models
 from .errors import AuthRequired as AuthRequired
 from .errors import ISMUError as ISMUError
-from .errors import NetworkError, RateLimited, StateError, UnsupportedOperation, UpstreamError
+from .errors import NetworkError, RateLimited, UnsupportedOperation, UpstreamError
+from .storage import check_private_file, private_directory
+from .storage import private_write as private_write
 
 BASE = "https://is.muni.cz"
 HOSTS = {"is.muni.cz", "muni.islogin.cz"}
-
-
-def private_write(path: Path, data: bytes):
-    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-    fd, tmp = tempfile.mkstemp(dir=path.parent)
-    try:
-        os.fchmod(fd, 0o600)
-        with os.fdopen(fd, "wb") as f:
-            f.write(data)
-        os.replace(tmp, path)
-    finally:
-        if os.path.exists(tmp):
-            os.unlink(tmp)
 
 
 class Transport:
@@ -40,7 +27,7 @@ class Transport:
         self.state_dir = Path(state_dir)
         self.cookie_path = self.state_dir / "session.json"
         self.session = requests.Session()
-        self.session.headers["User-Agent"] = "ISMUReader/0.4 (unofficial IS MU client)"
+        self.session.headers["User-Agent"] = "ISMUReader/0.5 (unofficial IS MU client)"
         self.delay = delay
         self.max_bytes = max_bytes
         self.last_request = 0.0
@@ -48,14 +35,10 @@ class Transport:
         self._load()
 
     def _load(self):
-        if self.cookie_path.is_symlink():
-            raise StateError("Session file must be a private regular file (chmod 600).")
-        if not self.cookie_path.exists():
+        if not check_private_file(self.cookie_path, missing_ok=True):
             return
-        if not self.cookie_path.is_file() or self.cookie_path.stat().st_mode & 0o077:
-            raise StateError("Session file must be a private regular file (chmod 600).")
         try:
-            cookies = json.loads(self.cookie_path.read_text())
+            cookies = json.loads(self.cookie_path.read_text(encoding="utf-8"))
             if not isinstance(cookies, list):
                 raise ValueError("Expected a cookie list")
             jar = requests.cookies.RequestsCookieJar()
@@ -92,8 +75,7 @@ class Transport:
                         discard=c.discard,
                     )
                 )
-        self.state_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
-        os.chmod(self.state_dir, 0o700)
+        private_directory(self.state_dir, secure_existing=True)
         private_write(self.cookie_path, json.dumps(cookies).encode())
 
     @staticmethod

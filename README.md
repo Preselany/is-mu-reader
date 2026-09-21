@@ -27,7 +27,9 @@ The adapter combines an observed internal JSON/HTML course endpoint, native XML 
 
 **Before connecting:** read [permissions and responsible use](docs/responsible-use.md). IS MU requires prior operator consent for bulk operations; request pacing does not replace permission. This project has no university approval. Its MIT license covers the source, not access to IS MU or redistribution of collected content.
 
-Requires Python 3.11+ on Linux or macOS and an IS MU student account with a supported password login. Clone the repository, then install it locally:
+Requires Python 3.11+ on **Linux or Windows** and an IS MU student account with a supported password login. Windows works natively; WSL and Bash are not required. On Windows, store private state on a local NTFS drive.
+
+**Linux:**
 
 ```bash
 git clone https://github.com/Preselany/is-mu-reader.git
@@ -40,9 +42,23 @@ ismu status
 ismu courses --table
 ```
 
-The password is prompted without echo and is never saved. Session cookies are saved in `.ismu-state/` relative to the current working directory, with private file permissions. For use from different directories, set `IS_MU_STATE_DIR` to an absolute private directory or pass `--state-dir PATH` before the command. Use a separate state directory for each account. An existing authenticated session takes precedence over a new login username.
+**Windows (PowerShell or Command Prompt):**
 
-After installation, `./ismu` is also available as a shortcut to this project's `.venv`; its state directory follows the same rules as the installed console command.
+```powershell
+git clone https://github.com/Preselany/is-mu-reader.git
+cd is-mu-reader
+py -3 -m venv .venv
+.venv\Scripts\python.exe -m pip install -e .
+.venv\Scripts\ismu.exe login --username YOUR_UCO
+.venv\Scripts\ismu.exe status
+.venv\Scripts\ismu.exe courses --table
+```
+
+Use Python 3.11 or newer. If the `py` launcher is unavailable, use `python` for the venv command. These Windows commands do not require script activation or a PowerShell execution-policy change. Replace `ismu` with `.venv\Scripts\ismu.exe` in the examples below, or use `python -m ismu` with the installed environment's Python.
+
+The password is prompted without echo and is never saved. Session cookies are saved in `.ismu-state/` relative to the current working directory, with private file permissions: owner-only modes on Linux, a protected current-user ACL on Windows. For use from different directories, set `IS_MU_STATE_DIR` to an absolute private directory or pass `--state-dir PATH` before the command. Use a separate state directory for each account. An existing authenticated session takes precedence over a new login username.
+
+The repository shortcuts `./ismu` (Linux) and `.\ismu.cmd` (Windows) use this project's `.venv`; their state directory follows the same rules as the installed console command. Python, CLI, ROPOT and local REST interfaces have the same behavior on both platforms.
 
 ```bash
 # Replace CODE with a code returned by `ismu courses`.
@@ -172,7 +188,7 @@ python -m openapi_spec_validator docs/openapi.json
 python -m build
 ```
 
-All automated tests use synthetic data and local mocks; they do not log into IS MU. The CI workflow tests Python 3.11–3.13 on Linux. macOS is intended to work but has not been live-tested; Windows permission handling is not supported yet.
+All automated tests use synthetic data and local mocks; they do not log into IS MU. CI tests Python 3.11–3.13 on both Linux and native Windows, including private storage, the local REST service, Unicode, timezone fallback, and clean wheel installation. Windows uses `pywin32` for native ACLs; `tzdata` supplies the IANA timezone database when the OS does not. macOS retains the POSIX implementation but is not in the tested support matrix. Authenticated upstream behavior has been live-tested on Linux only; Windows CI uses synthetic data and makes no requests to IS MU.
 
 ## License
 

@@ -1,6 +1,6 @@
 # API and CLI reference
 
-Version: package `0.4.0`, REST prefix `/v1`, snapshot `schema_version: 1`. The machine-readable contract is [openapi.json](openapi.json). The package is an alpha; consumers should tolerate additional fields and check the changelog before upgrading.
+Version: package `0.5.0`, REST prefix `/v1`, snapshot `schema_version: 1`. The machine-readable contract is [openapi.json](openapi.json). The package is an alpha; consumers should tolerate additional fields and check the changelog before upgrading.
 
 ## Command line
 

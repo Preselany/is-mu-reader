@@ -4,17 +4,23 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "is-mu-reader"
-version = "0.4.0"
+version = "0.5.0"
 description = "Authenticated IS MU collection, explicit ROPOT attempts, JSON CLI and local read API"
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.11"
-dependencies = ["requests>=2.32,<3", "beautifulsoup4>=4.12,<5"]
+dependencies = [
+  "requests>=2.32,<3",
+  "beautifulsoup4>=4.12,<5",
+  "tzdata>=2025.1",
+  "pywin32>=308; sys_platform == 'win32'",
+]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",
-  "Operating System :: POSIX",
+  "Operating System :: POSIX :: Linux",
+  "Operating System :: Microsoft :: Windows",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
   "Topic :: Education",

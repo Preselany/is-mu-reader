@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "IS MU Reader local API",
-    "version": "0.4.0",
+    "version": "0.5.0",
     "description": "Unofficial loopback API for IS MU reads. Log in through the CLI first. Full mail/notice views require explicit opt-in because they can mark items read. No account secrets or teaching materials are bundled.",
     "license": {
       "name": "MIT",

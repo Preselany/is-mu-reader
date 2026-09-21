@@ -13,6 +13,10 @@ from .transport import AuthRequired, ISMUError, private_write
 
 
 def main(argv=None):
+    # Windows redirects otherwise use a legacy code page, corrupting Czech JSON.
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser(
         description="IS MU access without a browser. Read-only collection plus explicit ROPOT actions."
     )
@@ -114,7 +118,11 @@ def main(argv=None):
                 public=args.public,
                 allow_writes=args.allow_attempt or args.confirm_submit,
             )
-            answers = json.loads(Path(args.answers).read_text()) if args.answers else {}
+            answers = (
+                json.loads(Path(args.answers).read_text(encoding="utf-8-sig"))
+                if args.answers
+                else {}
+            )
             if args.action == "submit":
                 result = attempt.submit(answers, confirm=args.confirm_submit)
             elif args.action == "save":

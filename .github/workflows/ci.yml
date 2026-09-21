@@ -6,9 +6,11 @@ permissions:
   contents: read
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
+        os: [ubuntu-latest, windows-latest]
         python-version: ["3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v6
@@ -25,3 +27,4 @@ jobs:
       - run: mypy --follow-imports=silent --ignore-missing-imports --warn-unused-ignores tests/typing/public_api.py
       - run: python -m openapi_spec_validator docs/openapi.json
       - run: python -m build
+      - run: python tools/check_wheel.py

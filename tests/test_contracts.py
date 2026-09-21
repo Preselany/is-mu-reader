@@ -6,6 +6,7 @@ from types import SimpleNamespace
 from unittest.mock import Mock
 
 import requests
+from test_storage import assert_private
 
 from ismu import parsers as p
 from ismu.client import Client
@@ -134,8 +135,8 @@ class ReadContracts(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             t = Transport(tmp)
             t._save()
-            self.assertEqual(Path(tmp, "session.json").stat().st_mode & 0o777, 0o600)
-            self.assertEqual(Path(tmp).stat().st_mode & 0o777, 0o700)
+            assert_private(self, Path(tmp, "session.json"))
+            assert_private(self, Path(tmp), directory=True)
 
     def test_interrupted_download_becomes_reader_error(self):
         with tempfile.TemporaryDirectory() as tmp:

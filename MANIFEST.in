@@ -1,4 +1,5 @@
 include LICENSE README.md CONTRIBUTING.md SECURITY.md CHANGELOG.md
+include ismu ismu.cmd
 recursive-include docs *.md *.json
 recursive-include examples *.py
 recursive-include tests *.py

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0 — 2026-09-21
+
+- Support native Windows and Linux with the same Python, CLI, ROPOT and local REST interfaces. Add Windows setup instructions, a `.cmd` shortcut and `python -m ismu`.
+- Use protected current-user Windows ACLs through the Windows-only `pywin32` dependency. Preserve POSIX private modes. Create private temporary files before writing, reject permissive secret files and links/reparse points, and retain atomic replacement.
+- Bundle a `tzdata` fallback and use UTF-8 for saved state, answer JSON, model generation and CLI output. Accept a UTF-8 BOM in answer files.
+- Test Python 3.11–3.13 on Linux and Windows, including actual filesystem permissions, Czech text, timezone fallback, mocked readers/ROPOTs/REST and clean wheel installation. Tests do not access a live IS account.
+- Keep successful API response shapes and all 21 REST routes compatible. Fresh authentication is recommended when changing computers or operating systems; active ROPOT state is not a migration format.
+
 ## Public source publication — 2026-09-17
 
 - Publish the source on [GitHub](https://github.com/Preselany/is-mu-reader) under MIT, with synthetic fixtures and no private account data.

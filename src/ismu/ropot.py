@@ -20,6 +20,7 @@ from . import parsers as p
 from .errors import AttemptUncertain as AttemptUncertain
 from .errors import InvalidInput, ParseError, StateError, UnsupportedOperation
 from .questions import Answer, AnswerField, AnswerValue, Choice, Question
+from .storage import check_private_file
 from .transport import BASE, AuthRequired, ISMUError, Transport, private_write
 
 
@@ -307,14 +308,12 @@ class RopotSession:
         )
 
     def _load(self):
-        if not self.cache_path.exists():
+        if not check_private_file(self.cache_path, missing_ok=True):
             raise StateError(
                 "No locally captured ROPOT page. Run inspect, then start if appropriate."
             )
-        if self.cache_path.is_symlink() or self.cache_path.stat().st_mode & 0o077:
-            raise StateError("ROPOT state must be a private regular file (chmod 600).")
         try:
-            cached = json.loads(self.cache_path.read_text())
+            cached = json.loads(self.cache_path.read_text(encoding="utf-8"))
         except (ValueError, UnicodeError):
             raise StateError("ROPOT cache is unreadable; inspect the attempt in IS MU.") from None
         if (

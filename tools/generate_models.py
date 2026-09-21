@@ -92,16 +92,18 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
-    schemas = json.loads((ROOT / "docs/openapi.json").read_text())["components"]["schemas"]
+    schemas = json.loads((ROOT / "docs/openapi.json").read_text(encoding="utf-8"))["components"][
+        "schemas"
+    ]
     source = generate(schemas)
     target = ROOT / "src/ismu/models.py"
     if args.check:
-        if not target.exists() or ast.dump(ast.parse(target.read_text())) != ast.dump(
-            ast.parse(source)
-        ):
+        if not target.exists() or ast.dump(
+            ast.parse(target.read_text(encoding="utf-8"))
+        ) != ast.dump(ast.parse(source)):
             raise SystemExit("models.py is stale; run python tools/generate_models.py")
     else:
-        target.write_text(source)
+        target.write_text(source, encoding="utf-8")
 
 
 if __name__ == "__main__":

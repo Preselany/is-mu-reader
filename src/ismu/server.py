@@ -10,21 +10,24 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs, urlsplit
 
 from .errors import InvalidInput, RateLimited, StateError, UpstreamError
+from .storage import check_private_file, private_directory
 from .transport import AuthRequired, ISMUError, private_write
 
 
 def make_server(client, port=8765):
     token_path = client.transport.state_dir / "api-token"
-    if not token_path.exists():
-        private_write(token_path, secrets.token_urlsafe(32).encode())
-    if token_path.is_symlink() or token_path.stat().st_mode & 0o077:
-        raise InvalidInput("API token file must be private (chmod 600).")
-    token = token_path.read_text().strip()
+    try:
+        if not check_private_file(token_path, missing_ok=True):
+            private_directory(client.transport.state_dir, secure_existing=True)
+            private_write(token_path, secrets.token_urlsafe(32).encode())
+    except StateError as exc:
+        raise InvalidInput(str(exc)) from None
+    token = token_path.read_text(encoding="utf-8").strip()
     if len(token) < 32:
         raise InvalidInput("Invalid local API token.")
 
     class Handler(BaseHTTPRequestHandler):
-        server_version = "ISMUReader/0.4"
+        server_version = "ISMUReader/0.5"
 
         def log_message(self, *args):
             pass  # Do not put document paths, tokens or personal data in access logs.

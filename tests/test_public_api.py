@@ -1,6 +1,7 @@
 """Consumer-facing contracts, using only invented data and local mocks."""
 
 import json
+import os
 import tempfile
 import threading
 import traceback
@@ -31,7 +32,7 @@ from ismu import (
 from ismu.errors import AuthRequired as NewAuthRequired
 from ismu.server import make_server
 from ismu.transport import AuthRequired as OldAuthRequired
-from ismu.transport import Transport
+from ismu.transport import Transport, private_write
 
 
 class PublicClientContracts(unittest.TestCase):
@@ -185,8 +186,7 @@ class QuestionContracts(unittest.TestCase):
             attempt = RopotSession(other, QREF, public=True, allow_writes=True)
             # Even a copied capture cannot transfer answers to a different state directory.
             attempt.cache_path.parent.mkdir(parents=True)
-            attempt.cache_path.write_bytes(self.attempt.cache_path.read_bytes())
-            attempt.cache_path.chmod(0o600)
+            private_write(attempt.cache_path, self.attempt.cache_path.read_bytes())
             attempt.transport.exchange = Mock()
             with self.assertRaises(StateError):
                 attempt.save(answer)
@@ -259,8 +259,7 @@ class ErrorContracts(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             transport = Transport(tmp)
             for content in invalid:
-                transport.cookie_path.write_text(content)
-                transport.cookie_path.chmod(0o600)
+                private_write(transport.cookie_path, content.encode())
                 with self.subTest(content=content), self.assertRaises(AuthRequired) as caught:
                     transport._load()
                 self.assertIn("--state-dir", str(caught.exception))
@@ -276,10 +275,15 @@ class ErrorContracts(unittest.TestCase):
     def test_nonregular_session_files_are_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp, "session.json")
-            path.symlink_to(Path(tmp, "missing.json"))
-            with self.assertRaises(StateError):
-                Transport(tmp)
-            path.unlink()
+            try:
+                path.symlink_to(Path(tmp, "missing.json"))
+            except OSError as exc:
+                if os.name != "nt" or exc.winerror != 1314:
+                    raise
+            else:
+                with self.assertRaises(StateError):
+                    Transport(tmp)
+                path.unlink()
             path.mkdir(mode=0o700)
             with self.assertRaises(StateError):
                 Transport(tmp)
